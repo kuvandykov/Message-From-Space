@@ -4,6 +4,8 @@ from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.shortcuts import render
+
 from .models import MessageFromSpace
 from .serializers import MessageSerializer
 
@@ -42,3 +44,12 @@ class MessageReaded(viewsets.ModelViewSet):
         message.save()
 
         return Response()
+    
+
+def ViewForAllMessages(request):
+    
+    messages = MessageFromSpace.objects.all()
+    serializer_class = MessageSerializer(messages, many=True)
+
+    return render(request, 'ViewForAllMessages.html', 
+                context={'message':serializer_class.data})
