@@ -18,7 +18,7 @@ class AllMessagesViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = MessageFromSpace.objects.filter(read=False)
     serializer_class = MessageSerializer
-    
+
     def list(self, request, *args):
         if 'last_id' in request.query_params:
             last_id = request.query_params['last_id']
@@ -44,12 +44,11 @@ class MessageReaded(viewsets.ModelViewSet):
         message.save()
 
         return Response()
-    
+
 
 def ViewForAllMessages(request):
-    
-    messages = MessageFromSpace.objects.all()
-    serializer_class = MessageSerializer(messages, many=True)
 
-    return render(request, 'ViewForAllMessages.html', 
-                context={'message':serializer_class.data})
+    #messages = MessageFromSpace.objects.all()
+    #serializer_class = MessageSerializer(messages, many=True)
+
+    return render(request, '/home/lukura/Message-From-Space/backend/messanger/templates/dist/index.html')
