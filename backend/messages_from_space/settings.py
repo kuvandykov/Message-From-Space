@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open('secret_key.txt', 'r') as f:
-    SECRET_KEY = f.read().rstrip()
+SECRET_KEY = 'dasdqwqwd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 

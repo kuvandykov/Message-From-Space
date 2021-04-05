@@ -1,16 +1,18 @@
-from django.urls import path
-from django.views.generic import RedirectView
+from django.urls import path, re_path
 
 from rest_framework import routers
 
-from .views import (MessageViewSet, MessageReaded,
-                AllMessagesViewSet, ViewForAllMessages)
+from .views import (MessageViewSet, MessageReaded, ViewForAllMessages)
 
 
 
 router = routers.DefaultRouter()
-#router.register(r'^$', AllMessagesViewSet)
 router.register('get_messages', MessageViewSet, basename='messages')
-router.register('mark_read', MessageReaded)
 
-urlpatterns = [path(r'^$', ViewForAllMessages, name='all-messages')] + router.urls
+urlpatterns = [
+    path(r'^$', ViewForAllMessages, name='all-messages'),
+    re_path('mark_read/', MessageReaded.as_view()),
+    ] + router.urls
+
+
+

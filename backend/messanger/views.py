@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from rest_framework import generics
-from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from django.shortcuts import render
 
@@ -16,7 +16,7 @@ class AllMessagesViewSet(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = MessageFromSpace.objects.filter(read=False)
+    queryset = MessageFromSpace.objects.filter(read=False)                          # get all not read messages from db
     serializer_class = MessageSerializer
 
     def list(self, request, *args):
@@ -33,11 +33,17 @@ class MessageViewSet(viewsets.ModelViewSet):
             serializer_class = MessageSerializer(items, many=True)
             return Response(serializer_class.data)
 
-class MessageReaded(viewsets.ModelViewSet):
-    queryset = MessageFromSpace.objects.filter(read=False)
-    serializer_class = MessageSerializer
 
-    def patch(self, request):
+# Custom class ignoring csrf check
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return
+
+class MessageReaded(APIView):
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)  # allow patch-reqest
+    def patch(self, request):                                                        # without csfr checking
         readed_id = request.query_params['id']
         message = MessageFromSpace.objects.get(id=readed_id)
         message.read = True
@@ -46,9 +52,7 @@ class MessageReaded(viewsets.ModelViewSet):
         return Response()
 
 
-def ViewForAllMessages(request):
 
-    #messages = MessageFromSpace.objects.all()
-    #serializer_class = MessageSerializer(messages, many=True)
+def ViewForAllMessages(request):
 
     return render(request, '/home/lukura/Message-From-Space/backend/messanger/templates/dist/index.html')
