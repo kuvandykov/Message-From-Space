@@ -16,7 +16,7 @@
         },
         methods: {
             async MessageReaded(){
-                    await fetch(`http://localhost:8000/api/mark_read/?id=${this.id}`, {
+                    await fetch(`http://lukura.pythonanywhere.com/api/mark_read/?id=${this.id}`, {
                     method: 'patch',
                 }
                 )}

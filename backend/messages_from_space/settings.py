@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open('etc/secret_key.txt') as f:
+with open('secret_key.txt', 'r') as f:
     SECRET_KEY = f.read().rstrip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
