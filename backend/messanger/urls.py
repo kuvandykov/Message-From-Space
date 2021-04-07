@@ -11,6 +11,6 @@ router = routers.DefaultRouter()
 router.register('get_messages', MessageViewSet, basename='messages')
 
 urlpatterns = [
-    path(r'^$', ViewForAllMessages, name='all-messages'),
+    path('', ViewForAllMessages, name='all-messages'),
     re_path('mark_read/', MessageReaded.as_view()),
     ] + router.urls

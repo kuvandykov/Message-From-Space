@@ -54,4 +54,4 @@ class MessageReaded(APIView):
 
 def ViewForAllMessages(request):
 
-    return render(request, '/messanger/templates/dist/index.html')
+    return render(request, '/home/KRL/proga/projects/test/Message-From-Space/backend/messanger/templates/dist/index.html')
