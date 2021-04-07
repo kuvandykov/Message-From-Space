@@ -1,13 +1,14 @@
 from rest_framework import viewsets
-from rest_framework import generics
-from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from django.shortcuts import render
 
 from .models import MessageFromSpace
 from .serializers import MessageSerializer
+
 
 
 class AllMessagesViewSet(viewsets.ModelViewSet):
@@ -33,11 +34,16 @@ class MessageViewSet(viewsets.ModelViewSet):
             serializer_class = MessageSerializer(items, many=True)
             return Response(serializer_class.data)
 
-class MessageReaded(viewsets.ModelViewSet):
-    queryset = MessageFromSpace.objects.filter(read=False)
-    serializer_class = MessageSerializer
+# Custom class ignoring csrf check
+class CsrfExemptSessionAuthentication(SessionAuthentication):
 
-    def patch(self, request):
+    def enforce_csrf(self, request):
+        return
+
+class MessageReaded(APIView):
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)  # allow patch-reqest
+    def patch(self, request):                                                        # without csfr checking
         readed_id = request.query_params['id']
         message = MessageFromSpace.objects.get(id=readed_id)
         message.read = True
@@ -47,9 +53,5 @@ class MessageReaded(viewsets.ModelViewSet):
     
 
 def ViewForAllMessages(request):
-    
-    messages = MessageFromSpace.objects.all()
-    serializer_class = MessageSerializer(messages, many=True)
 
-    return render(request, 'ViewForAllMessages.html', 
-                context={'message':serializer_class.data})
+    return render(request, '/messanger/templates/dist/index.html')
